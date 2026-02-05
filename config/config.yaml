@@ -1,0 +1,54 @@
+# Email to Redshift ETL Configuration
+
+email:
+  imap_server: ${EMAIL_IMAP_SERVER}
+  email_address: ${EMAIL_ADDRESS}
+  password: ${EMAIL_PASSWORD}
+  timeout: 30
+
+s3:
+  access_key: ${AWS_ACCESS_KEY_ID}
+  secret_key: ${AWS_SECRET_ACCESS_KEY}
+  bucket_name: ${S3_BUCKET_NAME}
+  region: ${AWS_REGION}
+
+redshift:
+  host: ${REDSHIFT_HOST}
+  port: ${REDSHIFT_PORT}
+  database: ${REDSHIFT_DATABASE}
+  user: ${REDSHIFT_USER}
+  password: ${REDSHIFT_PASSWORD}
+  schema: ${REDSHIFT_SCHEMA}
+
+excel:
+  sheet_name: 0
+
+data_sources:
+  yas:
+    email_subject: "DETAILS DES TRANSACTIONS SOLEVA"
+    s3_folders:
+      raw: "togo-subsidy/yas/raw/{date}/"
+      processed: "togo-subsidy/yas/processed/"
+      backup: "togo-subsidy/yas/backup/{date}/"
+    table_name: "data_migration.yas_payments"
+    
+  moov:
+    email_subject: "SOLEVA Biller Transaction Daily Report"
+    s3_folders:
+      raw: "togo-subsidy/moov/raw/{date}/"
+      processed: "togo-subsidy/moov/processed/"
+      backup: "togo-subsidy/moov/backup/{date}/"
+    table_name: "data_migration.moov_payments"
+
+quality_checks:
+  enabled: true
+  min_rows: 1
+  max_null_percentage: 50
+
+logging:
+  level: ${LOG_LEVEL}
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+pipeline:
+  retry_attempts: 3
+  retry_delay: 5
